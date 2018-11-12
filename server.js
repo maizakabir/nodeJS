@@ -7,6 +7,10 @@ app.get('/', function(request, response){ /*'/' means root route*/
   response.sendFile(__dirname+'/index.html');   /*__dirname is the root address*/
 });
 
+app.get('/about', function(request, response){ /*'/' means root route*/
+  response.sendFile(__dirname+'/about.html');   /*__dirname is the root address*/
+});
+
 server.listen(process.env.PORT, /* || 3000 (for local host)*/ process.env.IP, /* || 'localhost' */ function(){
   console.log('Server running');
 });
