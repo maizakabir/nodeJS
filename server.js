@@ -7,7 +7,7 @@ app.get('/', function(request, response){ /*'/' means root route*/
   response.sendFile(__dirname+'/index.html');   /*__dirname is the root address*/
 });
 
-app.get('/about', function(request, response){ /*'/' means root route*/
+app.get('/about-page', function(request, response){ /*'/' means root route*/
   response.sendFile(__dirname+'/about.html');   /*__dirname is the root address*/
 });
 
