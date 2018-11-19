@@ -36,6 +36,15 @@ app.get('/article/list', function(request, response) {
    return response.status(200).json({articles: article}); 
 });
 
+article.push({title:"Test article 1", content:"content 1"});
+article.push({title:"Test article 2", content:"content 2"});
+
+app.get('/article/:articleID', function(request, response){   //:articleID is a variable
+    response.render('../article.ejs', {
+      article: article[request.params.articleID]
+    })
+});
+
 server.listen(process.env.PORT, /* || 3000 (for local host)*/ process.env.IP, /* || 'localhost' */ function(){
   console.log('Server running');
 });
