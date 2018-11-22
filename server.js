@@ -4,21 +4,48 @@ var app = express();
 var server = http.Server(app);
 var bodyParser = require('body-parser');
 
-var mongo= require ('mongodb');
+// var mongo= require ('mongodb');
 
 //for c9
 var db;
-var db_url= "mongodb://"+process.env.IP+"27017";    //for local: comment out this line and write: var db_url: "mongodb://localhost:27017"
-mongo.MongoClient.connect(db_url, {useNewUrlParser:true}, function(err, client){
-  if(err)
-  {
-    console.log('Could not connect to MongoDB');
+var db_url= "mongodb://" + process.env.IP + ":27017";    //for local: comment out this line and write: var db_url: "mongodb://localhost:27017"
+
+
+/*MongoDB code; classword 9a*/
+// mongo.MongoClient.connect(db_url, {useNewUrlParser:true}, function(err, client){
+//   if(err)
+//   {
+//     console.log('Could not connect to MongoDB');
+//   }
+//   else
+//   {
+//     db= client.db('node-cw9');
+//   }
+// })
+
+// Mongoose code; classwork 9b
+var mongoose= require ("mongoose");
+
+mongoose.connect(db_url+"/node-cw9");
+mongoose.connection.on('error', function(){
+  console.log(err);
+  console.log('Could not connect to mongodb');
+});
+
+var Schema = mongoose.Schema;
+
+var articleSchema = new Schema({
+  title:{
+    type: String,
+    required: "Title required"
+  },
+  content: {
+    type: String
   }
-  else
-  {
-    db= client.db('node-cw9');
-  }
-})
+});
+
+var Article = mongoose.model('Article', articleSchema);
+
 
 var save= function (form_data){
   db.createCollection ('articles', function(err, collection){
@@ -48,13 +75,24 @@ app.get('/new-article', function(request, response){ /*'/' means root route*/
 var article = [];
 
 app.post('/article/create', function(request, response){
+  //new article for mongoose
+  var new_article = new Article (request.body);
+  
+  new_article.save (function(err, data){
+    if(err)
+      return response.status(400).json({error:"Please add a title"});
+    console.log(data);
+    return response.status(200).json({message: "Article successfully created"});
+  })
+  
   console.log(request.body);
-  if(!request.body.title){
-    return response.status(400).json({error:"Please add a title"});
-  }
-  // article.push(request.body);
-  save(request.body)
-  return response.status(200).json({message: "Article successfully created"});
+  // if(!request.body.title){
+  //   return response.status(400).json({error:"Please add a title"});
+  // }
+  // // article.push(request.body);
+  // //save for mongoDB
+  // //save(request.body)
+  // return response.status(200).json({message: "Article successfully created"});
 });
 
 app.get('/article/list', function(request, response) {
