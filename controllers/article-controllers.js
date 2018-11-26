@@ -9,11 +9,13 @@ module.exports.create = function(request, response){
     var new_article = new Article (request.body);
       
     new_article.save (function(err, data){
-    if(err)
-        return response.status(400).json({error:"Please add a title"});
+    if(err){
+        console.log(err)
+    }
+    return response.status(400).json({error:"Please add a title"});
     console.log(data);
     return response.status(200).json({message: "Article successfully created"});
-    })
+    });
       
     console.log(request.body);
     //for mongoDB
